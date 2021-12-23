@@ -1,0 +1,19 @@
+{
+  "name": "@gcdn/examples",
+  "version": "1.0.0",
+  "author": "GraphCDN Engineering <engineering@graphcdn.io>",
+  "scripts": {
+    "format": "prettier --write ."
+  },
+  "devDependencies": {
+    "prettier": "^2.5.1"
+  },
+  "prettier": {
+    "tabWidth": 2,
+    "trailingComma": "all",
+    "singleQuote": true,
+    "jsxSingleQuote": true,
+    "semi": false,
+    "printWidth": 80
+  }
+}

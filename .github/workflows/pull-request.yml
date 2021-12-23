@@ -1,0 +1,35 @@
+name: pull request
+
+on: pull_request
+
+concurrency:
+  group: pull-request-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  main:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '14'
+
+      - name: Cache node modules
+        id: node-modules-cache
+        uses: actions/cache@v2
+        with:
+          path: |
+            **/node_modules
+          key: v1-node-modules-${{ runner.os }}-${{ hashFiles('yarn.lock') }}
+
+      - name: Install dependencies
+        if: steps.node-modules-cache.outputs.cache-hit != 'true'
+        shell: bash
+        run: yarn --frozen-lockfile --prefer-offline
+
+      - name: Check formatting
+        run: yarn prettier --check '**/*.{js,jsx,ts,tsx,json,md,mdx}'
