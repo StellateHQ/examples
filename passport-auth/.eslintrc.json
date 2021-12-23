@@ -1,0 +1,9 @@
+{
+  "extends": "next/core-web-vitals",
+  "overrides": [
+    {
+      "files": "pages/api/**/*.ts",
+      "rules": { "react-hooks/rules-of-hooks": "off" }
+    }
+  ]
+}
