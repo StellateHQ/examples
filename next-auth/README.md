@@ -19,7 +19,7 @@ You can see a demo of this project at https://next-auth.examples.graphcdn.org/
 
 1. Clone the repository
 2. Install the dependencies using `yarn`
-3. Create a Vercel project by running `yarn deploy` and answering the promts
+3. Create a Vercel project by running `yarn deploy` and answering the prompts
 4. Add a custom domain (e.g. `your.custom.domain`) to the project in Vercel
    (see the [Vercel docs](https://vercel.com/docs/concepts/projects/custom-domains)
    on how to do that)
@@ -27,7 +27,7 @@ You can see a demo of this project at https://next-auth.examples.graphcdn.org/
    the name of the session cookie for authenticated users is `__Secure-next-auth.session-token`
 6. Assign the custom domain `graphcdn.your.custom.domain` to the new service
 7. Add [environment variables](https://vercel.com/docs/concepts/projects/environment-variables)
-   to your Vercel project (the ones from `.env.examle`):
+   to your Vercel project (the ones from `.env.example`):
    - `SESSION_SECRET`: Any random string to use as secret for your session
      cookies
    - `NEXT_PUBLIC_API_ENDPOINT`: The endpoint for your API, which now is
@@ -43,7 +43,7 @@ to copy the `.env.example` file into `.env.local`.
 ## Cookie-based authentication with GraphCDN
 
 Using a GraphQL API that performs cookie-based authentication with GraphCDN
-requires an extra step: You need to set up a custom domain at GraphCDN.
+requires an extra step: You need to set up a custom domain on GraphCDN.
 
 The reason for that is just how cookies over HTTP work. When sending a request
 to log in, the response usually contains a `Set-Cookie` header that stores some
