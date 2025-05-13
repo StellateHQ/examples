@@ -22,7 +22,7 @@ export async function Carousel({ data }: { data: FragmentOf<typeof CarouselFragm
   return (
     <div className=" w-full overflow-x-auto pb-6 pt-1">
       <ul className="flex animate-carousel gap-4">
-        {carouselProducts.map((product) => (
+        {carouselProducts.map((product: any) => (
           <li
             key={`${product.slug}`}
             className="relative aspect-square h-[30vh] max-h-[240px] w-2/3 max-w-[320px] flex-none md:w-1/3"

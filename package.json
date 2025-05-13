@@ -1,16 +1,20 @@
 {
   "name": "@gcdn/examples",
   "version": "1.0.0",
+  "private": true,
   "author": "GraphCDN Engineering <engineering@graphcdn.io>",
-  "scripts": {
-    "format": "prettier --write ."
-  },
   "packageManager": "pnpm@9.15.0",
   "workspaces": [
     "passport-auth",
     "next-auth",
     "ecommerce-demo"
   ],
+  "scripts": {
+    "format": "prettier --write .",
+    "build": "pnpm -r run build",
+    "dev": "pnpm -r --parallel run dev",
+    "deploy": "pnpm -r run deploy"
+  },
   "devDependencies": {
     "prettier": "3.5.3"
   },

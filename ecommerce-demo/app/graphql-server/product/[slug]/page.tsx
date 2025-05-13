@@ -38,7 +38,7 @@ async function Recommendations({
     <div className="py-8">
       <h2 className="mb-4 text-2xl font-bold">Recommendations</h2>
       <ul className="flex w-full gap-4 overflow-x-auto pt-1">
-        {recommendations.map((product, i) => (
+        {recommendations.map((product: any, i: any) => (
           <li
             key={product.slug}
             className="aspect-square w-full flex-none min-[475px]:w-1/2 sm:w-1/3 md:w-1/4 lg:w-1/5"

@@ -16,7 +16,7 @@ export function Gallery({ data }: { data: FragmentOf<typeof GalleryFragment> | {
 
   const allImages = [
     { src: coverImage.src, altText: coverImage.alt },
-    ...images.map((image) => ({ src: image.src, altText: image.alt }))
+    ...images.map((image: any) => ({ src: image.src, altText: image.alt }))
   ];
 
   const pathname = usePathname();
