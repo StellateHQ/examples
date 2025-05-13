@@ -31,7 +31,7 @@ export default function HomePage() {
   if (!data) return null;
   return (
     <>
-      <Navbar data={'currentUser' in data ? data.currentUser?.cart ?? null : null} />
+      <Navbar data={'currentUser' in data ? (data.currentUser?.cart ?? null) : null} />
       <main>
         <ThreeItemGrid data={data} />
         <Carousel data={data} />

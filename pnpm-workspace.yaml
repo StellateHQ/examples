@@ -1,4 +1,4 @@
 packages:
-  - "passport-auth"
-  - "next-auth"
-  - "ecommerce-demo"
+  - 'passport-auth'
+  - 'next-auth'
+  - 'ecommerce-demo'

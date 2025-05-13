@@ -12,7 +12,7 @@
     "ecommerce-demo"
   ],
   "devDependencies": {
-    "prettier": "^2.5.1"
+    "prettier": "3.5.3"
   },
   "prettier": {
     "tabWidth": 2,
@@ -20,6 +20,9 @@
     "singleQuote": true,
     "jsxSingleQuote": true,
     "semi": false,
-    "printWidth": 80
+    "printWidth": 80,
+    "plugins": [
+      "prettier-plugin-tailwindcss"
+    ]
   }
 }
