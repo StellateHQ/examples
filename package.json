@@ -5,6 +5,12 @@
   "scripts": {
     "format": "prettier --write ."
   },
+  "packageManager": "pnpm@9.15.0",
+  "workspaces": [
+    "passport-auth",
+    "next-auth",
+    "ecommerce-demo"
+  ],
   "devDependencies": {
     "prettier": "^2.5.1"
   },

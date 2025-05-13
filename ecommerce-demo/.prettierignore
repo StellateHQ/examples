@@ -1,0 +1,4 @@
+.vercel
+.next
+pnpm-lock.yaml
+graphql-env.d.ts

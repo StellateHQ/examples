@@ -13,23 +13,23 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Setup Node.js
+      - name: Setup Node.js & pnpm
         uses: actions/setup-node@v2
         with:
-          node-version: '14'
+          node-version: '18'
+          cache: 'pnpm'
 
-      - name: Cache node modules
-        id: node-modules-cache
+      - name: Cache pnpm store & node_modules
         uses: actions/cache@v2
         with:
+          # pnpm keeps a global store plus per-workspace node_modules
           path: |
+            ~/.pnpm-store
             **/node_modules
-          key: v1-node-modules-${{ runner.os }}-${{ hashFiles('yarn.lock') }}
+          key: v1-pnpm-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}
 
       - name: Install dependencies
-        if: steps.node-modules-cache.outputs.cache-hit != 'true'
-        shell: bash
-        run: yarn --frozen-lockfile --prefer-offline
+        run: pnpm install --frozen-lockfile
 
       - name: Check formatting
-        run: yarn prettier --check '**/*.{js,jsx,ts,tsx,json,md,mdx}'
+        run: pnpm run prettier -- --check '**/*.{js,jsx,ts,tsx,json,md,mdx}'
