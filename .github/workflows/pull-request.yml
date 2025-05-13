@@ -11,22 +11,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Setup Node.js & pnpm
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v3
         with:
-          node-version: '18'
-          cache: 'pnpm'
-
-      - name: Cache pnpm store & node_modules
-        uses: actions/cache@v2
-        with:
-          # pnpm keeps a global store plus per-workspace node_modules
-          path: |
-            ~/.pnpm-store
-            **/node_modules
-          key: v1-pnpm-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}
+          node-version: 18
+          cache: pnpm
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
