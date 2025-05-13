@@ -14,13 +14,11 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      # 2) Install pnpm CLI first
+      # 2) Install the pnpm CLI (auto-detects v9.15.0 from packageManager)
       - name: Install pnpm CLI
         uses: pnpm/action-setup@v4
-        with:
-          version: 9.15.0
 
-      # 3) Then setup Node.js **with** pnpm caching
+      # 3) Set up Node.js v18 with pnpm cache
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
@@ -31,6 +29,6 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      # 5) Run your formatting check
+      # 5) Check formatting (uses the prettier from root devDependencies)
       - name: Check formatting
-        run: pnpm run prettier -- --check '**/*.{js,jsx,ts,tsx,json,md,mdx}'
+        run: pnpm exec prettier --check '**/*.{js,jsx,ts,tsx,json,md,mdx}'
