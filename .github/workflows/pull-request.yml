@@ -10,20 +10,27 @@ jobs:
   main:
     runs-on: ubuntu-latest
     steps:
+      # 1) Checkout your code
       - name: Checkout code
         uses: actions/checkout@v3
 
+      # 2) Install pnpm CLI first
+      - name: Install pnpm CLI
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9.15.0
+
+      # 3) Then setup Node.js **with** pnpm caching
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
           node-version: 18
           cache: pnpm
 
-      - name: Install pnpm CLI
-        uses: pnpm/action-setup@v4
-
+      # 4) Install all workspace dependencies
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
+      # 5) Run your formatting check
       - name: Check formatting
         run: pnpm run prettier -- --check '**/*.{js,jsx,ts,tsx,json,md,mdx}'
