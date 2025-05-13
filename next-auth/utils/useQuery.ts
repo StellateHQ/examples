@@ -11,31 +11,31 @@ type RequestState = {
 }
 
 export function useLazyQuery(body: {
-  query: string;
-  variables?: Record<string, any>;
+  query: string
+  variables?: Record<string, any>
 }) {
   const [result, setResult] = useState<RequestState>({
     fetching: true,
     error: null,
     data: null,
-  });
+  })
 
   const execute = useCallback(
     async (variables: Record<string, any> = {}) => {
-      setResult(r => ({ ...r, fetching: true, error: null }));
+      setResult((r) => ({ ...r, fetching: true, error: null }))
       try {
         const res = await fetch(process.env.NEXT_PUBLIC_API_ENDPOINT!, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          credentials: "include",
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          credentials: 'include',
           body: JSON.stringify({
             query: body.query,
             variables: { ...body.variables, ...variables },
           }),
-        });
+        })
 
-        const text = await res.text();
-        console.log("📬 HTTP", res.status, res.statusText, "→", text);
+        const text = await res.text()
+        console.log('📬 HTTP', res.status, res.statusText, '→', text)
 
         if (!res.ok) {
           // HTTP-level error (404, 500, etc)
@@ -46,23 +46,23 @@ export function useLazyQuery(body: {
               responseText: text,
             },
             data: null,
-          });
-          return;
+          })
+          return
         }
 
-        let json: any;
+        let json: any
         try {
-          json = JSON.parse(text);
+          json = JSON.parse(text)
         } catch {
           setResult({
             fetching: false,
-            error: { message: "Invalid JSON response", responseText: text },
+            error: { message: 'Invalid JSON response', responseText: text },
             data: null,
-          });
-          return;
+          })
+          return
         }
 
-        const graphQLError = json.errors?.[0];
+        const graphQLError = json.errors?.[0]
         setResult({
           fetching: false,
           error: graphQLError
@@ -72,18 +72,21 @@ export function useLazyQuery(body: {
               }
             : null,
           data: json.data ?? null,
-        });
+        })
       } catch (err: any) {
         // Network or other
-        setResult({ fetching: false, error: { message: err.message }, data: null });
+        setResult({
+          fetching: false,
+          error: { message: err.message },
+          data: null,
+        })
       }
     },
-    [body.query, body.variables]
-  );
+    [body.query, body.variables],
+  )
 
-  return [result, execute] as const;
+  return [result, execute] as const
 }
-
 
 export function useQuery(body: {
   query: string

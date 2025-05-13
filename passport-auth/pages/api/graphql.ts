@@ -102,9 +102,17 @@ const Query = t.queryType({
       resolve(_root, _args, ctx): Express.User {
         const user = ctx.req.user
         if (!user) {
-          throw new GraphQLError('Not authenticated', undefined, undefined, undefined, undefined, undefined, {
-            statusCode: 401,
-          })
+          throw new GraphQLError(
+            'Not authenticated',
+            undefined,
+            undefined,
+            undefined,
+            undefined,
+            undefined,
+            {
+              statusCode: 401,
+            },
+          )
         }
         return user
       },
@@ -160,11 +168,16 @@ export default nextConnect()
   .use(passport.session())
   .post(async (req: ReqWithAuth, res: NextApiResponse) => {
     if (req.method.toUpperCase() !== 'POST') {
-      return res.setHeader('Allow', 'POST').status(405).send('Method Not Allowed')
+      return res
+        .setHeader('Allow', 'POST')
+        .status(405)
+        .send('Method Not Allowed')
     }
 
     try {
-      const { parse, validate, contextFactory, execute, schema } = getEnveloped({ req, res })
+      const { parse, validate, contextFactory, execute, schema } = getEnveloped(
+        { req, res },
+      )
       const { query, variables } = req.body
       const document = parse(query)
       const validationErrors = validate(schema, document)
@@ -183,7 +196,12 @@ export default nextConnect()
 
       const statusCode = result.errors
         ? result.errors.reduce((code, error) => {
-            return Math.max(code, typeof error.extensions.statusCode === 'number' ? error.extensions.statusCode : 0)
+            return Math.max(
+              code,
+              typeof error.extensions.statusCode === 'number'
+                ? error.extensions.statusCode
+                : 0,
+            )
           }, 200)
         : 200
 
