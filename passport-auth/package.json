@@ -1,5 +1,6 @@
 {
   "name": "@gcdn/example-passport-auth",
+  "packageManager": "pnpm@9.15.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
