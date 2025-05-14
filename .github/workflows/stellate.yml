@@ -1,7 +1,7 @@
 name: Stellate
 on:
   push:
-    branches: [main, github]
+    branches: [master, github]
     paths:
       - 'gcdn-push-demo/**'
 
