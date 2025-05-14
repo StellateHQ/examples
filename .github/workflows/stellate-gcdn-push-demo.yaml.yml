@@ -1,0 +1,52 @@
+name: GCDN Push Demo
+
+on:
+  push:
+    branches: [master]
+    paths:
+      - 'gcdn-push-demo/**'
+  pull_request:
+    branches: [master]
+    paths:
+      - 'gcdn-push-demo/**'
+
+jobs:
+  push-schema:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: pnpm/action-setup@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 'lts/*'
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Stellate CLI version
+        working-directory: gcdn-push-demo
+        run: pnpm exec stellate version
+        env:
+          STELLATE_TOKEN: ${{ secrets.STELLATE_TOKEN }}
+
+      - name: Push to Stellate
+        working-directory: gcdn-push-demo
+        run: pnpm exec stellate push
+        env:
+          STELLATE_TOKEN: ${{ secrets.STELLATE_TOKEN }}
+
+      - name: Push schema only
+        working-directory: gcdn-push-demo
+        run: pnpm exec stellate push schema
+        env:
+          STELLATE_TOKEN: ${{ secrets.STELLATE_TOKEN }}
+
+      - name: Push to staging
+        working-directory: gcdn-push-demo
+        run: pnpm exec stellate push --env staging
+        env:
+          STELLATE_TOKEN: ${{ secrets.STELLATE_TOKEN }}

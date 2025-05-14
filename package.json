@@ -7,13 +7,15 @@
   "workspaces": [
     "passport-auth",
     "next-auth",
-    "ecommerce-demo"
+    "ecommerce-demo",
+    "gcdn-push-demo"
   ],
   "scripts": {
     "format": "prettier --write .",
     "build": "pnpm -r run build",
     "dev": "pnpm -r --parallel run dev",
-    "deploy": "pnpm -r run deploy"
+    "deploy": "pnpm -r run deploy",
+    "push:schema": "pnpm --filter @gcdn/gcdn-push-demo run push"
   },
   "devDependencies": {
     "prettier": "3.5.3"
