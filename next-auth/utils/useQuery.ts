@@ -21,46 +21,67 @@ export function useLazyQuery(body: {
   })
 
   const execute = useCallback(
-    (variables: Record<string, any> = {}) =>
-      fetch(process.env.NEXT_PUBLIC_API_ENDPOINT, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          query: body.query,
-          variables: { ...body.variables, ...variables },
-        }),
-        // It's crucial to include credentials when sending the request to
-        // GraphCDN. Since it's on a different domain, the session cookie
-        // won't be sent with the request otherwise.
-        credentials: 'include',
-      })
-        .then((res) => res.text())
-        .then(async (responseText) => {
-          let json
-          try {
-            json = JSON.parse(responseText)
-          } catch {
-            setResult({
-              fetching: false,
-              error: { message: 'Cannot parse response as JSON', responseText },
-              data: null,
-            })
-            return
-          }
+    async (variables: Record<string, any> = {}) => {
+      setResult((r) => ({ ...r, fetching: true, error: null }))
+      try {
+        const res = await fetch(process.env.NEXT_PUBLIC_API_ENDPOINT!, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          credentials: 'include',
+          body: JSON.stringify({
+            query: body.query,
+            variables: { ...body.variables, ...variables },
+          }),
+        })
 
-          const graphQLError = json?.errors?.[0]
-          const message = graphQLError?.message ?? 'Unknown GraphQL error'
+        const text = await res.text()
+        console.log('📬 HTTP', res.status, res.statusText, '→', text)
+
+        if (!res.ok) {
+          // HTTP-level error (404, 500, etc)
           setResult({
             fetching: false,
-            error: graphQLError
-              ? { message, graphQLErrors: json.errors }
-              : null,
-            data: json?.data ?? null,
+            error: {
+              message: `HTTP error ${res.status}: ${res.statusText}`,
+              responseText: text,
+            },
+            data: null,
           })
+          return
+        }
+
+        let json: any
+        try {
+          json = JSON.parse(text)
+        } catch {
+          setResult({
+            fetching: false,
+            error: { message: 'Invalid JSON response', responseText: text },
+            data: null,
+          })
+          return
+        }
+
+        const graphQLError = json.errors?.[0]
+        setResult({
+          fetching: false,
+          error: graphQLError
+            ? {
+                message: graphQLError.message,
+                graphQLErrors: json.errors,
+              }
+            : null,
+          data: json.data ?? null,
         })
-        .catch((error) => {
-          setResult({ fetching: false, error, data: null })
-        }),
+      } catch (err: any) {
+        // Network or other
+        setResult({
+          fetching: false,
+          error: { message: err.message },
+          data: null,
+        })
+      }
+    },
     [body.query, body.variables],
   )
 

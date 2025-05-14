@@ -18,9 +18,7 @@ import { Strategy as LocalStrategy } from 'passport-local'
 
 declare global {
   namespace Express {
-    // tslint:disable-next-line:no-empty-interface
     interface AuthInfo {}
-    // tslint:disable-next-line:no-empty-interface
     interface User {
       name?: string
     }
@@ -29,8 +27,6 @@ declare global {
 
 passport.use(
   new LocalStrategy((username, password, done) => {
-    // For the sake of example, we don't validate credentials, i.e. login works
-    // with every username-password-combination.
     const user: Express.User = { name: username }
     return done(null, user)
   }),
@@ -69,14 +65,20 @@ function login(req: ReqWithAuth, user: Express.User) {
 
 function logout(req: ReqWithAuth, res: NextApiResponse) {
   return new Promise<boolean>((resolve, reject) => {
-    req.logout()
-    req.session.destroy((error) => {
-      if (error) return reject(error)
-      res.setHeader(
-        'Set-Cookie',
-        'connect.sid=; Path=/; HttpOnly; Expires=Thu, 01 Jan 1970 00:00:00 GMT',
-      )
-      resolve(true)
+    // pass a callback to logout(), per latest TS definitions
+    req.logout((err: any) => {
+      if (err) {
+        return reject(err)
+      }
+      // only when logout callback has run, destroy the session
+      req.session.destroy((error) => {
+        if (error) return reject(error)
+        res.setHeader(
+          'Set-Cookie',
+          'connect.sid=; Path=/; HttpOnly; Expires=Thu, 01 Jan 1970 00:00:00 GMT',
+        )
+        resolve(true)
+      })
     })
   })
 }
@@ -102,12 +104,14 @@ const Query = t.queryType({
         if (!user) {
           throw new GraphQLError(
             'Not authenticated',
-            undefined, // nodes
-            undefined, // source
-            undefined, // positions
-            undefined, // path
-            undefined, // originalError
-            { statusCode: 401 },
+            undefined,
+            undefined,
+            undefined,
+            undefined,
+            undefined,
+            {
+              statusCode: 401,
+            },
           )
         }
         return user
@@ -155,7 +159,7 @@ const getEnveloped = envelop({
 export default nextConnect()
   .use(
     session({
-      secret: process.env.SESSION_SECRET,
+      secret: process.env.SESSION_SECRET!,
       resave: false,
       saveUninitialized: false,
     }),
@@ -174,7 +178,6 @@ export default nextConnect()
       const { parse, validate, contextFactory, execute, schema } = getEnveloped(
         { req, res },
       )
-
       const { query, variables } = req.body
       const document = parse(query)
       const validationErrors = validate(schema, document)
@@ -191,12 +194,6 @@ export default nextConnect()
         contextValue,
       })
 
-      // It's important to use semantically correct status codes! A response
-      // with a 200 status code is considered cacheable by fastly. If it
-      // contains errors, GraphCDN will still set the `Cache-Control` header
-      // accordingly (`private, no-store`), but Fastly might disable caching
-      // for this particular query for up to two minutes if the status code
-      // of the response is considered cacheable. (See https://developer.fastly.com/learning/concepts/request-collapsing/#hit-for-pass)
       const statusCode = result.errors
         ? result.errors.reduce((code, error) => {
             return Math.max(
@@ -207,9 +204,10 @@ export default nextConnect()
             )
           }, 200)
         : 200
+
       res.status(statusCode).json(result)
     } catch (error) {
-      if (error instanceof GraphQLError === false) {
+      if (!(error instanceof GraphQLError)) {
         error = new GraphQLError(error.message)
       }
       res.status(500).json({ errors: [error] })

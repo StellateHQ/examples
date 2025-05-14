@@ -1,12 +1,22 @@
 {
   "name": "@gcdn/examples",
   "version": "1.0.0",
+  "private": true,
   "author": "GraphCDN Engineering <engineering@graphcdn.io>",
+  "packageManager": "pnpm@9.15.0",
+  "workspaces": [
+    "passport-auth",
+    "next-auth",
+    "ecommerce-demo"
+  ],
   "scripts": {
-    "format": "prettier --write ."
+    "format": "prettier --write .",
+    "build": "pnpm -r run build",
+    "dev": "pnpm -r --parallel run dev",
+    "deploy": "pnpm -r run deploy"
   },
   "devDependencies": {
-    "prettier": "^2.5.1"
+    "prettier": "3.5.3"
   },
   "prettier": {
     "tabWidth": 2,
@@ -14,6 +24,9 @@
     "singleQuote": true,
     "jsxSingleQuote": true,
     "semi": false,
-    "printWidth": 80
+    "printWidth": 80,
+    "plugins": [
+      "prettier-plugin-tailwindcss"
+    ]
   }
 }

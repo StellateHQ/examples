@@ -10,26 +10,25 @@ jobs:
   main:
     runs-on: ubuntu-latest
     steps:
+      # 1) Checkout your code
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
+      # 2) Install the pnpm CLI (auto-detects v9.15.0 from packageManager)
+      - name: Install pnpm CLI
+        uses: pnpm/action-setup@v4
+
+      # 3) Set up Node.js v18 with pnpm cache
       - name: Setup Node.js
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v3
         with:
-          node-version: '14'
+          node-version: 18
+          cache: pnpm
 
-      - name: Cache node modules
-        id: node-modules-cache
-        uses: actions/cache@v2
-        with:
-          path: |
-            **/node_modules
-          key: v1-node-modules-${{ runner.os }}-${{ hashFiles('yarn.lock') }}
-
+      # 4) Install all workspace dependencies
       - name: Install dependencies
-        if: steps.node-modules-cache.outputs.cache-hit != 'true'
-        shell: bash
-        run: yarn --frozen-lockfile --prefer-offline
+        run: pnpm install --frozen-lockfile
 
+      # 5) Check formatting (uses the prettier from root devDependencies)
       - name: Check formatting
-        run: yarn prettier --check '**/*.{js,jsx,ts,tsx,json,md,mdx}'
+        run: pnpm exec prettier --check '**/*.{js,jsx,ts,tsx,json,md,mdx}'
