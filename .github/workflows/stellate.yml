@@ -2,64 +2,51 @@ name: Stellate
 
 on:
   push:
-    branches:
-      - master
-      - github
+    branches: [ master ]
     paths:
       - 'gcdn-push-demo/**'
   pull_request:
-    branches:
-      - master
-      - github
+    branches: [ master ]
     paths:
       - 'gcdn-push-demo/**'
-  schedule:
-    - cron: '30 5 * * *'
-  workflow_dispatch:
 
 jobs:
-  main:
+  push-schema:
     runs-on: ubuntu-latest
     steps:
-      # 1) Checkout your code
-      - name: Checkout code
-        uses: actions/checkout@v3
+      - uses: actions/checkout@v3
 
-      # 2) Install the pnpm CLI (reads version from packageManager)
-      - name: Install pnpm CLI
-        uses: pnpm/action-setup@v4
+      - uses: pnpm/action-setup@v4
 
-      # 3) Set up Node.js with pnpm caching
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
           node-version: 'lts/*'
           cache: pnpm
 
-      # 4) Install all workspace deps
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      # 5) Verify Stellate CLI
       - name: Stellate CLI version
+        working-directory: gcdn-push-demo
         run: pnpm exec stellate version
         env:
           STELLATE_TOKEN: ${{ secrets.STELLATE_TOKEN }}
 
-      # 6) Push to your default environment
       - name: Push to Stellate
+        working-directory: gcdn-push-demo
         run: pnpm exec stellate push
         env:
           STELLATE_TOKEN: ${{ secrets.STELLATE_TOKEN }}
 
-      # 7) Push only the schema
       - name: Push schema only
+        working-directory: gcdn-push-demo
         run: pnpm exec stellate push schema
         env:
           STELLATE_TOKEN: ${{ secrets.STELLATE_TOKEN }}
 
-      # 8) Push to staging
       - name: Push to staging
+        working-directory: gcdn-push-demo
         run: pnpm exec stellate push --env staging
         env:
           STELLATE_TOKEN: ${{ secrets.STELLATE_TOKEN }}
