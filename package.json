@@ -9,7 +9,8 @@
     "next-auth",
     "ecommerce-demo",
     "gcdn-push-demo",
-    "graphql-demo-nextjs"
+    "graphql-demo-nextjs",
+    "partial-query-caching-demo"
   ],
   "scripts": {
     "format": "prettier --write .",

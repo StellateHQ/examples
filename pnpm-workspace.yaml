@@ -4,3 +4,4 @@ packages:
   - 'ecommerce-demo'
   - 'gcdn-push-demo'
   - 'graphql-demo-nextjs'
+  - 'partial-query-caching-demo'
