@@ -1,0 +1,30 @@
+name: CI
+
+on: pull_request
+
+jobs:
+  test:
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup Rust
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          toolchain: 1.69.0
+
+      - name: Cargo cache
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            ./target
+          key: v1-gql-query-rs-${{ runner.os }}-${{ hashFiles('./Cargo.lock') }}
+
+      - name: Check
+        run: cargo check
+
+      - name: Test
+        run: cargo test

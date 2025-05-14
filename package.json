@@ -8,7 +8,8 @@
     "passport-auth",
     "next-auth",
     "ecommerce-demo",
-    "gcdn-push-demo"
+    "gcdn-push-demo",
+    "partial-query-caching-demo"
   ],
   "scripts": {
     "format": "prettier --write .",

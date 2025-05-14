@@ -1,9 +1,8 @@
 {
   "private": true,
-  "packageManager": "pnpm@8.2.0",
+  "packageManager": "pnpm@9.15.0",
   "engines": {
-    "node": ">=18",
-    "pnpm": ">=7"
+    "node": ">=18"
   },
   "scripts": {
     "dev": "next dev --turbo",
@@ -22,7 +21,7 @@
     "clsx": "^2.1.0",
     "geist": "^1.3.0",
     "gql.tada": "^1.5.5",
-    "graphql": "^16.8.1",
+    "graphql": "16.11.0",
     "meros": "^1.3.0",
     "next": "14.1.4",
     "react": "18.2.0",
