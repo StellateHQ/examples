@@ -1,44 +1,61 @@
 name: Stellate
 on:
   push:
-    branches: [master, github]
+    branches:
+      - master
+      - github
     paths:
       - 'gcdn-push-demo/**'
   pull_request:
-    branches: [master, github]
+    branches:
+      - master
+      - github
     paths:
       - 'gcdn-push-demo/**'
-
-  # Run this action everyday at 5.30am UTC
   schedule:
+    # every day at 05:30 UTC
     - cron: '30 5 * * *'
-
-  # Allow us to manually trigger this workflow
   workflow_dispatch:
 
 jobs:
-  main:
+  push-schema:
     runs-on: ubuntu-latest
     steps:
+      # 1) grab the repo
       - uses: actions/checkout@v3
+
+      # 2) setup node + pnpm caching
       - uses: actions/setup-node@v3
         with:
           node-version: 'lts/*'
-          check-latest: true
-          cache: 'npm'
-      - name: Stellate Version
-        run: npx stellate version
+          cache: pnpm
+
+      # 3) install the pnpm CLI
+      - uses: pnpm/action-setup@v4
+
+      # 4) install ALL workspaces (incl. gcdn-push-demo)
+      - run: pnpm install --frozen-lockfile
+
+      # 5) sanity-check the Stellate version
+      - name: Stellate CLI version
+        run: pnpm exec stellate version
         env:
           STELLATE_TOKEN: ${{ secrets.STELLATE_TOKEN }}
+
+      # 6) push your schema to your default environment
       - name: Push to Stellate
-        run: npx stellate push
+        run: pnpm exec stellate push
         env:
           STELLATE_TOKEN: ${{ secrets.STELLATE_TOKEN }}
-      - name: Push Schema Only to Stellate
-        run: npx stellate push schema
+
+      # 7) push schema only (if you need it)
+      - name: Push schema only
+        run: pnpm exec stellate push schema
         env:
           STELLATE_TOKEN: ${{ secrets.STELLATE_TOKEN }}
-      - name: Push Environment to Stellate
-        run: npx stellate push --env staging
+
+      # 8) push to staging
+      - name: Push to staging
+        run: pnpm exec stellate push --env staging
         env:
           STELLATE_TOKEN: ${{ secrets.STELLATE_TOKEN }}
