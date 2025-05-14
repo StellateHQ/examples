@@ -1,0 +1,11 @@
+{
+  "name": "@gcdn/gcdn-push-demo",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "push": "stellate push"
+  },
+  "dependencies": {
+    "stellate": "^1.28.0"
+  }
+}

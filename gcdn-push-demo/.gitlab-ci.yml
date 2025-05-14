@@ -1,0 +1,13 @@
+config_push:
+  image: node:lts
+  cache:
+    paths:
+      - node_modules
+  rules:
+    - if: '$CI_COMMIT_BRANCH =~ /^main/'
+    - if: '$CI_COMMIT_BRANCH =~ /^gitlab/'
+  script:
+    - npx stellate version
+    - npx stellate push 
+    - npx stellate push schema
+    - npx stellate push --env staging

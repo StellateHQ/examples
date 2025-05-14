@@ -2,3 +2,4 @@ packages:
   - 'passport-auth'
   - 'next-auth'
   - 'ecommerce-demo'
+  - 'gcdn-push-demo'
