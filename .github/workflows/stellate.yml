@@ -1,9 +1,9 @@
 name: Stellate
-on: 
-  push: 
-    branches: 
-      - main 
-      - github
+on:
+  push:
+    branches: [main, github]
+    paths:
+      - 'gcdn-push-demo/**'
 
   # Run this action everyday at 5.30am UTC
   schedule:
@@ -12,29 +12,29 @@ on:
   # Allow us to manually trigger this workflow
   workflow_dispatch:
 
-jobs: 
-  main: 
+jobs:
+  main:
     runs-on: ubuntu-latest
-    steps: 
+    steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
-        with: 
+        with:
           node-version: 'lts/*'
-          check-latest: true 
+          check-latest: true
           cache: 'npm'
       - name: Stellate Version
-        run: npx stellate version 
-        env: 
+        run: npx stellate version
+        env:
           STELLATE_TOKEN: ${{ secrets.STELLATE_TOKEN }}
       - name: Push to Stellate
-        run: npx stellate push 
-        env: 
+        run: npx stellate push
+        env:
           STELLATE_TOKEN: ${{ secrets.STELLATE_TOKEN }}
       - name: Push Schema Only to Stellate
         run: npx stellate push schema
-        env: 
+        env:
           STELLATE_TOKEN: ${{ secrets.STELLATE_TOKEN }}
       - name: Push Environment to Stellate
         run: npx stellate push --env staging
-        env: 
+        env:
           STELLATE_TOKEN: ${{ secrets.STELLATE_TOKEN }}

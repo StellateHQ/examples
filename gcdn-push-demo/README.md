@@ -20,31 +20,30 @@ Configure your GraphCDN token as an _Action Secret_. You can read more about how
 
 ```yaml
 name: Stellate
-on: 
-  push: 
-    branches: 
-      - main 
+on:
+  push:
+    branches:
+      - main
 
-jobs: 
-  main: 
+jobs:
+  main:
     runs-on: ubuntu-latest
-    steps: 
+    steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
-        with: 
+        with:
           node-version: 'lts/*'
-          check-latest: true 
+          check-latest: true
           cache: 'npm'
       - name: Push to Stellate
-        run: npx stellate push 
-        env: 
+        run: npx stellate push
+        env:
           STELLATE_TOKEN: ${{ secrets.STELLATE_TOKEN }}
 ```
 
 ## GitLab CI
 
 ![GitLab CI Status](https://gitlab.com/mlocher/gcdn-push-demo/badges/main/pipeline.svg)
-
 
 Configured in [`.gitlab-ci.yml`](.gitlab-ci.yml)
 
@@ -61,7 +60,7 @@ config_push:
   rules:
     - if: '$CI_COMMIT_BRANCH =~ /^main/'
   script:
-    - npx stellate push 
+    - npx stellate push
 ```
 
 ## CircleCI
@@ -75,13 +74,13 @@ Configure your Stellate token as an environment variable in a CircleCI [Context]
 ```yaml
 version: 2.1
 
-jobs: 
-  stellate: 
-    docker: 
+jobs:
+  stellate:
+    docker:
       - image: cimg/node:lts
-    steps: 
-      - checkout 
-      - run: npx stellate push 
+    steps:
+      - checkout
+      - run: npx stellate push
 
 workflows:
   version: 2.1
