@@ -4,6 +4,10 @@ on:
     branches: [master, github]
     paths:
       - 'gcdn-push-demo/**'
+  pull_request:
+    branches: [master, github]
+    paths:
+      - 'gcdn-push-demo/**'
 
   # Run this action everyday at 5.30am UTC
   schedule:
