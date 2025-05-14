@@ -3,3 +3,4 @@ packages:
   - 'next-auth'
   - 'ecommerce-demo'
   - 'gcdn-push-demo'
+  - 'partial-query-caching-demo'

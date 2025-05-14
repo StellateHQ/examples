@@ -8,11 +8,12 @@
     "passport-auth",
     "next-auth",
     "ecommerce-demo",
-    "gcdn-push-demo"
+    "gcdn-push-demo",
+    "partial-query-caching-demo"
   ],
   "scripts": {
     "format": "prettier --write .",
-    "build": "pnpm -r run build",
+    "build": "pnpm -r --parallel run build",
     "dev": "pnpm -r --parallel run dev",
     "deploy": "pnpm -r run deploy",
     "push:schema": "pnpm --filter @gcdn/gcdn-push-demo run push"
@@ -30,5 +31,8 @@
     "plugins": [
       "prettier-plugin-tailwindcss"
     ]
+  },
+  "dependencies": {
+    "bob-the-bundler": "^7.0.1"
   }
 }
