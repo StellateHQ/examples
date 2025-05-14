@@ -35,7 +35,7 @@ importers:
         specifier: ^1.5.5
         version: 1.8.10(graphql@16.11.0)(typescript@5.4.3)
       graphql:
-        specifier: ^16.8.1
+        specifier: 16.11.0
         version: 16.11.0
       meros:
         specifier: ^1.3.0
@@ -132,8 +132,8 @@ importers:
         specifier: ^0.4.1
         version: 0.4.2
       gqtx:
-        specifier: ^0.8.1
-        version: 0.8.1(graphql@16.11.0)
+        specifier: 0.9.3
+        version: 0.9.3(graphql@16.11.0)
       graphql:
         specifier: 16.11.0
         version: 16.11.0
@@ -196,7 +196,7 @@ importers:
         specifier: 13.4.5
         version: 13.4.5(eslint@8.42.0)(typescript@5.1.3)
       graphql:
-        specifier: ^16.6.0
+        specifier: 16.11.0
         version: 16.11.0
       graphql-yoga:
         specifier: ^4.0.0
@@ -230,10 +230,10 @@ importers:
         specifier: ^1.17.2
         version: 1.18.1
       gqtx:
-        specifier: ^0.8.1
-        version: 0.8.1(graphql@16.11.0)
+        specifier: 0.9.3
+        version: 0.9.3(graphql@16.11.0)
       graphql:
-        specifier: ^16.1.0
+        specifier: 16.11.0
         version: 16.11.0
       next:
         specifier: 14.2.0
@@ -6331,13 +6331,13 @@ packages:
     peerDependencies:
       typescript: ^5.0.0
 
-  gqtx@0.8.1:
+  gqtx@0.9.3:
     resolution:
       {
-        integrity: sha512-TUoOVSm5Gah1UY75i+degpvO8DOy//28t6d+a51Nh3dCiG080pfjDZQ/ALmAbbLWIP+W0pDCQ5YrZTZ/x7vXDw==,
+        integrity: sha512-LQii9isCdtVuUg1RC9wJy1L8o8bWEgubs2yQ/+INnvenqUxjTb/5rObmreDT2fxe07CTCaufPy64JYg1bcoT4g==,
       }
     peerDependencies:
-      graphql: ^15.1.0
+      graphql: ^16.7.0
 
   graceful-fs@4.2.11:
     resolution:
@@ -15105,7 +15105,7 @@ snapshots:
       - '@gql.tada/vue-support'
       - graphql
 
-  gqtx@0.8.1(graphql@16.11.0):
+  gqtx@0.9.3(graphql@16.11.0):
     dependencies:
       graphql: 16.11.0
 
