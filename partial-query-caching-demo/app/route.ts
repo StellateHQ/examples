@@ -27,7 +27,6 @@ async function withCors(
   req: Request,
   ctx: { params: Record<string, string | string[]> } | any,
 ) {
-  
   const res = await handleRequest(req, ctx)
   setCors(res)
   return res

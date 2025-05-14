@@ -31,8 +31,5 @@
     "plugins": [
       "prettier-plugin-tailwindcss"
     ]
-  },
-  "dependencies": {
-    "bob-the-bundler": "^7.0.1"
   }
 }
