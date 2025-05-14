@@ -1,12 +1,12 @@
-name: Stellate
+name: GCDN Push Demo
 
 on:
   push:
-    branches: [ master ]
+    branches: [master]
     paths:
       - 'gcdn-push-demo/**'
   pull_request:
-    branches: [ master ]
+    branches: [master]
     paths:
       - 'gcdn-push-demo/**'
 
