@@ -3,3 +3,4 @@ packages:
   - 'next-auth'
   - 'ecommerce-demo'
   - 'gcdn-push-demo'
+  - 'graphql-demo-nextjs'
