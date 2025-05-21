@@ -21,21 +21,6 @@
   "devDependencies": {
     "prettier": "3.5.3"
   },
-  "dependencies": {
-    "@envelop/core": "^2.0.0",
-    "@graphql-tools/schema": "^9.0.0",
-    "graphql": "^16.7.1",
-    "graphql-playground-html": "^1.6.30",
-    "graphql-tag": "^2.12.6",
-    "jsonwebtoken": "^8.5.1",
-    "slugify": "^1.6.5",
-    "uuid": "^8.3.2",
-    "@tsndr/cloudflare-worker-jwt": "^1.1.5",
-    "@upstash/redis": "^1.19.0",
-    "next": "14.0.0",
-    "react": "18.2.0",
-    "react-dom": "18.2.0"
-  },
   "prettier": {
     "tabWidth": 2,
     "trailingComma": "all",

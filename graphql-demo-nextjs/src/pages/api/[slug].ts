@@ -3,7 +3,7 @@ import { envelop, useSchema } from '@envelop/core'
 import { Redis } from '@upstash/redis'
 import { validate as graphqlValidate } from 'graphql'
 import { userSchema } from '@/mock/schema'
-import { allowedOrigins } from '@/utils'
+import { ALLOWED_ORIGINS } from '@/utils'
 import { State } from '@/types'
 
 const redis = new Redis({
@@ -46,7 +46,7 @@ export default async function handler(
   }
 
   if (req.method === 'OPTIONS') {
-    res.setHeader('Access-Control-Allow-Origin', allowedOrigins)
+    res.setHeader('Access-Control-Allow-Origin', ALLOWED_ORIGINS)
     res.setHeader('Access-Control-Allow-Methods', 'OPTIONS, POST')
     res.setHeader('Access-Control-Allow-Headers', 'Content-Type')
     return res.status(204).end()
@@ -75,9 +75,9 @@ export default async function handler(
 
   const origin = req.headers.origin || ''
   const allow =
-    allowedOrigins.includes('*') || allowedOrigins.includes(origin)
+    ALLOWED_ORIGINS.includes('*') || ALLOWED_ORIGINS.includes(origin)
       ? origin
-      : allowedOrigins[0]
+      : ALLOWED_ORIGINS[0]
   res.setHeader('Access-Control-Allow-Origin', allow)
   res.setHeader('Access-Control-Allow-Methods', 'OPTIONS, POST')
   res.setHeader('Content-Type', 'application/json')

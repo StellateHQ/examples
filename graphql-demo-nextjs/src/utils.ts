@@ -12,4 +12,4 @@ export const createState = (): State => ({
   users: [{ id: '1', name: 'GraphCDN User' }],
 })
 
-export const allowedOrigins = process.env.ALLOWED_ORIGINS?.split(',') || ['*']
+export const ALLOWED_ORIGINS = process.env.ALLOWED_ORIGINS?.split(',') || ['*']
