@@ -1,0 +1,39 @@
+[package]
+name = "my-vercel-api"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+tokio = { version = "1", features = ["macros"] }
+serde_json = { version = "1", features = ["raw_value"] }
+# Documentation: https://docs.rs/vercel_runtime/latest/vercel_runtime
+vercel_runtime = { version = "1.0.2" }
+serde = "1.0.167"
+http = "0.2.9"
+gql-query = { path = "gql-query-rs" }
+reqwest = { version = "0.11.18", features = ["blocking"] }
+thiserror = "1.0.44"
+anyhow = "1.0.72"
+textwrap = "0.16.0"
+json_dotpath = "1.1.0"
+
+# You can specify a library for shared logic here (optional)
+# [lib]
+# path = "src-rs/lib.rs"
+
+# Each handler has to be specified as [[bin]]
+[[bin]]
+name = "handler"
+path = "api/handler.rs"
+
+[dev-dependencies]
+tokio-test = "0.4.2"
+
+# Note that you need to provide unique names for each binary:
+# [[bin]]
+# name = "user-id"
+# path = "api/user/[id].rs"
+#
+# [[bin]]
+# name = "group-id"
+# path = "api/group/[id].rs"
