@@ -18,21 +18,21 @@
     "graphql-playground-html": "^1.6.30",
     "graphql-tag": "^2.12.6",
     "jsonwebtoken": "9.0.2",
-    "next": "16.1.0",
+    "next": "16.1.1",
     "react": "^19.2.3",
     "react-dom": "^19.2.3",
     "slugify": "^1.6.5",
     "uuid": "^8.3.2"
   },
   "devDependencies": {
-    "@eslint/eslintrc": "^3",
+    "@eslint/eslintrc": "3.3.3",
     "@tailwindcss/postcss": "^4",
     "@types/jsonwebtoken": "^9.0.9",
     "@types/node": "^20",
     "@types/react": "^19.2.7",
     "@types/react-dom": "^19.2.3",
-    "eslint": "^9",
-    "eslint-config-next": "16.1.0",
+    "eslint": "9.39.2",
+    "eslint-config-next": "16.1.1",
     "tailwindcss": "^4",
     "typescript": "^5"
   }
