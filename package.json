@@ -22,6 +22,11 @@
   "devDependencies": {
     "prettier": "3.5.3"
   },
+  "overrides": {
+    "next-auth": {
+      "next": "16.1.1"
+    }
+  },
   "prettier": {
     "tabWidth": 2,
     "trailingComma": "all",
