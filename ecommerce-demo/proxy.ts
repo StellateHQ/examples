@@ -1,6 +1,6 @@
 import { type NextRequest, NextResponse } from 'next/server';
 
-export async function middleware(request: NextRequest) {
+export async function proxy(request: NextRequest) {
   if (request.cookies.has('user-ids')) return;
 
   const userUncached = randomUserId();

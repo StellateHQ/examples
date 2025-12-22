@@ -3,7 +3,18 @@ import { schema } from './schema'
 
 const logPlugin: Plugin = {
   onParams({ params }) {
-    console.log(params)
+    // Skip logging introspection queries to reduce console spam
+    if (params.operationName === 'IntrospectionQuery') {
+      return
+    }
+
+    // Only log in development and for actual operations
+    if (process.env.NODE_ENV === 'development' && params.operationName) {
+      console.log('GraphQL Operation:', {
+        operationName: params.operationName,
+        variables: params.variables,
+      })
+    }
   },
 }
 

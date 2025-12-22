@@ -1,7 +1,7 @@
 import NextAuth from 'next-auth'
 import CredentialsProvider from 'next-auth/providers/credentials'
 
-export default NextAuth({
+export const authOptions = {
   providers: [
     // For demonstration we use credentials auth; any combination is accepted
     CredentialsProvider({
@@ -22,7 +22,7 @@ export default NextAuth({
       },
     }),
   ],
-  secret: process.env.SESSION_SECRET,
+  secret: process.env.NEXTAUTH_SECRET,
   // only in production: set cookie domain for your subdomains
   ...(process.env.NEXT_PUBLIC_VERCEL_ENV === 'production'
     ? {
@@ -40,4 +40,6 @@ export default NextAuth({
         },
       }
     : {}),
-})
+}
+
+export default NextAuth(authOptions)

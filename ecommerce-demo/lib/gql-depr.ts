@@ -86,7 +86,7 @@ async function gql_depr<Data, Variables extends AnyVariables>(
   query: TadaDocumentNode<Data, Variables>,
   variables: Variables
 ): Promise<Data> {
-  const userId = cookies().get(USER_COOKIE)?.value;
+  const userId = (await cookies()).get(USER_COOKIE)?.value;
   const storage = makeStorage(userId);
   const client = getClient(storage?.adapter);
 

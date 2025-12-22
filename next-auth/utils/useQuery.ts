@@ -24,15 +24,18 @@ export function useLazyQuery(body: {
     async (variables: Record<string, any> = {}) => {
       setResult((r) => ({ ...r, fetching: true, error: null }))
       try {
-        const res = await fetch(process.env.NEXT_PUBLIC_API_ENDPOINT!, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          credentials: 'include',
-          body: JSON.stringify({
-            query: body.query,
-            variables: { ...body.variables, ...variables },
-          }),
-        })
+        const res = await fetch(
+          process.env.NEXT_PUBLIC_API_ENDPOINT || '/api/graphql',
+          {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            credentials: 'include',
+            body: JSON.stringify({
+              query: body.query,
+              variables: { ...body.variables, ...variables },
+            }),
+          },
+        )
 
         const text = await res.text()
         console.log('📬 HTTP', res.status, res.statusText, '→', text)

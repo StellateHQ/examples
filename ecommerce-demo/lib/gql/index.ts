@@ -9,11 +9,11 @@ import { resolvable } from '../resolvable';
 import { USER_COOKIE } from '../utils';
 import { executeRequest } from './execution';
 
-export function gql<Result, Variables>(
+export async function gql<Result, Variables>(
   query: TadaDocumentNode<Result, Variables>,
   variables: Variables
 ): Promise<ExecutionResult<Result>> {
-  const userId = cookies().get(USER_COOKIE)?.value;
+  const userId = (await cookies()).get(USER_COOKIE)?.value;
   const isMutation = query.definitions.some(
     (definition) =>
       definition.kind === Kind.OPERATION_DEFINITION &&

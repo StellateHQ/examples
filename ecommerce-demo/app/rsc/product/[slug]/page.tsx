@@ -25,7 +25,8 @@ type SqlResultImages = {
   alt: string;
 };
 
-export default async function ProductPage({ params }: { params: { slug: string } }) {
+export default async function ProductPage({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params;
   const [[product], images] = await Promise.all([
     sql<SqlResultProduct>(
       `
@@ -34,7 +35,7 @@ export default async function ProductPage({ params }: { params: { slug: string }
         JOIN images ON images.src = products.cover_image_src
         WHERE slug = ?
       `,
-      [params.slug],
+      [slug],
       1000
     ),
     sql<SqlResultImages>(
@@ -45,7 +46,7 @@ export default async function ProductPage({ params }: { params: { slug: string }
         JOIN products ON products.id = products_images.product_id
         WHERE products.slug = ?
       `,
-      [params.slug],
+      [slug],
       1000
     )
   ]);
@@ -96,7 +97,7 @@ type SqlResultRecommendations = {
 };
 
 async function Recommendations() {
-  const userId = cookies().get(USER_COOKIE)?.value;
+  const userId = (await cookies()).get(USER_COOKIE)?.value;
   const recommendations = userId
     ? await sql<SqlResultRecommendations>(
         `
