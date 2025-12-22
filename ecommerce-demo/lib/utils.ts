@@ -8,9 +8,9 @@ const TAG = {
   ORDER: 'order'
 } as const;
 
-export const revalidateCarts = () => revalidateTag(TAG.CART);
+export const revalidateCarts = () => revalidateTag(TAG.CART, {});
 
-export const revalidateOrders = () => revalidateTag(TAG.ORDER);
+export const revalidateOrders = () => revalidateTag(TAG.ORDER, {});
 
 export async function sql<Result extends Record<string, unknown> = Record<string, unknown>>(
   preparedStatement: string,
