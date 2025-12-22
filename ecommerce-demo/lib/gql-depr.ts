@@ -134,7 +134,7 @@ async function gql_depr<Data, Variables extends AnyVariables>(
 
   if (isMutation) {
     await storage?.waitForCacheWrite();
-    typeTags.forEach((typeTag) => revalidateTag(typeTag));
+    typeTags.forEach((typeTag) => revalidateTag(typeTag, {}));
   }
 
   return response.data;
