@@ -5,7 +5,7 @@ import { cookies } from 'next/headers';
 import { v4 as uuidv4 } from 'uuid';
 
 export async function addToCart(_prevState: any, productId: string) {
-  const userId = cookies().get(USER_COOKIE)?.value;
+  const userId = (await cookies()).get(USER_COOKIE)?.value;
   if (!userId) {
     return 'Must be logged in to add products to cart';
   }
@@ -61,7 +61,7 @@ async function _removeFromCart(userId: string, productId: string) {
 }
 
 export async function removeFromCart(_prevState: any, productId: string) {
-  const userId = cookies().get(USER_COOKIE)?.value;
+  const userId = (await cookies()).get(USER_COOKIE)?.value;
   if (!userId) {
     return 'Must be logged in to remove products from cart';
   }
@@ -99,7 +99,7 @@ export async function updateItemQuantity(
     quantity: number;
   }
 ) {
-  const userId = cookies().get(USER_COOKIE)?.value;
+  const userId = (await cookies()).get(USER_COOKIE)?.value;
   if (!userId) {
     return 'Must be logged in to edit cart';
   }

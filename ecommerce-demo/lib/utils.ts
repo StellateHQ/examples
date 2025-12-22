@@ -40,7 +40,7 @@ export async function sql<Result extends Record<string, unknown> = Record<string
       tags.push(TAG.ORDER);
   }
 
-  const userId = cookies().get(USER_COOKIE)?.value;
+  const userId = (await cookies()).get(USER_COOKIE)?.value;
   const response = await fetch('http://localhost:8787/sql', {
     method: 'POST',
     headers: {

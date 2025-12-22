@@ -3,7 +3,7 @@ import CartModal, { CartData } from './modal';
 import { USER_COOKIE, sql } from 'lib/utils';
 
 export default async function Cart() {
-  const userId = cookies().get(USER_COOKIE)?.value;
+  const userId = (await cookies()).get(USER_COOKIE)?.value;
   const [total, items] = userId
     ? await Promise.all([
         sql<{ total: number | null }>(

@@ -7,13 +7,14 @@ import { envelop, useSchema } from '@envelop/core'
 import { createTypesFactory, buildGraphQLSchema } from 'gqtx'
 import { GraphQLError } from 'graphql'
 import { NextApiRequest, NextApiResponse } from 'next'
-import { getSession } from 'next-auth/react'
+import { getServerSession } from 'next-auth/next'
+import { authOptions } from './auth/[...nextauth]'
 
 /**
  * Create the GraphQL schema
  */
 
-const t = createTypesFactory<{ req: NextApiRequest }>()
+const t = createTypesFactory<{ req: NextApiRequest; res: NextApiResponse }>()
 
 type UserType = { name?: string }
 
@@ -28,7 +29,7 @@ const Query = t.queryType({
       name: 'me',
       type: User,
       async resolve(_root, args, ctx): Promise<UserType> {
-        const session = await getSession({ req: ctx.req })
+        const session = await getServerSession(ctx.req, ctx.res, authOptions)
         if (!session) {
           throw new GraphQLError(
             'Not authenticated',
@@ -67,6 +68,7 @@ export default async function handler(
   try {
     const { parse, validate, contextFactory, execute, schema } = getEnveloped({
       req,
+      res,
     })
 
     const { query, variables } = req.body

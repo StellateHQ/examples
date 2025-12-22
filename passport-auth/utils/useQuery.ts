@@ -21,8 +21,9 @@ export function useLazyQuery(body: {
   })
 
   const execute = useCallback(
-    (variables: Record<string, any> = {}) =>
-      fetch(process.env.NEXT_PUBLIC_API_ENDPOINT, {
+    (variables: Record<string, any> = {}) => {
+      const endpoint = process.env.NEXT_PUBLIC_API_ENDPOINT || '/api/graphql'
+      return fetch(endpoint, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -60,7 +61,8 @@ export function useLazyQuery(body: {
         })
         .catch((error) => {
           setResult({ fetching: false, error, data: null })
-        }),
+        })
+    },
     [body.query, body.variables],
   )
 

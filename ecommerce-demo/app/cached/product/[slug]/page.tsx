@@ -2,7 +2,7 @@
 
 import { FragmentOf, graphql, readFragment } from 'gql.tada';
 import { notFound } from 'next/navigation';
-import { useMemo } from 'react';
+import { use, useMemo } from 'react';
 import { useQuery } from 'urql';
 import { CartFragment } from '../../components/cart/fragments';
 import Footer from '../../components/layout/footer';
@@ -75,10 +75,11 @@ const ProductPageQuery = graphql(
   [GalleryFragment, ProductDescriptionFragment, RecommendationsFragment, CartFragment]
 );
 
-export default function ProductPage({ params }: { params: { slug: string } }) {
+export default function ProductPage({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = use(params);
   const [{ data, fetching }] = useQuery({
     query: ProductPageQuery,
-    variables: useMemo(() => ({ slug: params.slug }), [params.slug])
+    variables: useMemo(() => ({ slug }), [slug])
   });
 
   if (fetching) return null;

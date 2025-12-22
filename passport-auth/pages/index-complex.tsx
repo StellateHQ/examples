@@ -1,139 +1,87 @@
-import { useState, useEffect } from 'react'
+import { useLazyQuery, useQuery } from '../utils/useQuery'
+import { useState } from 'react'
+
+const isAuthenticatedQuery = /* GraphQL */ `
+  {
+    me {
+      name
+    }
+  }
+`
+
+const loginMutation = /* GraphQL */ `
+  mutation ($username: String!, $password: String!) {
+    login(username: $username, password: $password)
+  }
+`
+
+const logoutMutation = /* GraphQL */ `
+  mutation {
+    logout
+  }
+`
+
+function AuthQuery(result: ReturnType<typeof useQuery>[0]) {
+  if (result.fetching) {
+    return (
+      <div className='flex items-center justify-center p-4'>
+        <div className='h-8 w-8 animate-spin rounded-full border-b-2 border-blue-600'></div>
+        <span className='ml-2 text-gray-600'>Loading GraphQL data...</span>
+      </div>
+    )
+  }
+
+  if (result.error) {
+    return (
+      <div className='mt-6 rounded-lg border border-red-200 bg-red-50 p-4'>
+        <div className='mb-2 flex items-center'>
+          <svg
+            className='mr-2 h-5 w-5 text-red-500'
+            fill='currentColor'
+            viewBox='0 0 20 20'
+          >
+            <path
+              fillRule='evenodd'
+              d='M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z'
+              clipRule='evenodd'
+            />
+          </svg>
+          <h3 className='text-lg font-medium text-red-800'>GraphQL Error</h3>
+        </div>
+        <p className='mb-3 text-sm text-red-600'>{result.error.message}</p>
+        {result.error.responseText && (
+          <details className='text-xs text-red-500'>
+            <summary className='cursor-pointer hover:text-red-700'>
+              View full response
+            </summary>
+            <pre className='mt-2 overflow-x-auto rounded bg-red-100 p-2 text-xs'>
+              {result.error.responseText}
+            </pre>
+          </details>
+        )}
+      </div>
+    )
+  }
+
+  return (
+    <div className='mt-6 rounded-lg border border-green-200 bg-green-50 p-4'>
+      <h3 className='mb-3 text-lg font-medium text-green-800'>
+        GraphQL Response
+      </h3>
+      <pre className='overflow-x-auto rounded bg-green-100 p-3 text-sm text-green-800'>
+        {JSON.stringify(result.data, null, 2)}
+      </pre>
+    </div>
+  )
+}
 
 export default function Home() {
-  const [authState, setAuthState] = useState<
-    'loading' | 'authenticated' | 'unauthenticated'
-  >('loading')
-  const [userName, setUserName] = useState<string | null>(null)
+  const [result, refetch] = useQuery({ query: isAuthenticatedQuery })
+  const [, login] = useLazyQuery({ query: loginMutation })
+  const [, logout] = useLazyQuery({ query: logoutMutation })
   const [isLoading, setIsLoading] = useState(false)
-  const [error, setError] = useState<string | null>(null)
 
-  // Check authentication status
-  useEffect(() => {
-    checkAuthStatus()
-  }, [])
-
-  const checkAuthStatus = async () => {
-    try {
-      const response = await fetch('/api/graphql', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          query: `{ me { name } }`,
-        }),
-        credentials: 'include',
-      })
-      const result = await response.json()
-
-      if (result.data?.me?.name) {
-        setAuthState('authenticated')
-        setUserName(result.data.me.name)
-      } else {
-        setAuthState('unauthenticated')
-      }
-    } catch (err) {
-      setAuthState('unauthenticated')
-      setError('Failed to check authentication status')
-    }
-  }
-
-  const handleLogin = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault()
-    setIsLoading(true)
-    setError(null)
-
-    try {
-      const form = event.target as HTMLFormElement
-      const formData = new FormData(form)
-      const username = formData.get('username') as string
-      const password = formData.get('password') as string
-
-      const response = await fetch('/api/graphql', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          query: `mutation { login(username: "${username}", password: "${password}") }`,
-        }),
-        credentials: 'include',
-      })
-
-      const result = await response.json()
-
-      if (result.data?.login) {
-        await checkAuthStatus()
-      } else {
-        setError('Login failed')
-      }
-    } catch (err) {
-      setError('Login request failed')
-    } finally {
-      setIsLoading(false)
-    }
-  }
-
-  const handleLogout = async () => {
-    setIsLoading(true)
-    setError(null)
-
-    try {
-      // Try GraphQL logout first
-      const graphqlResponse = await Promise.race([
-        fetch('/api/graphql', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            query: `mutation { logout }`,
-          }),
-          credentials: 'include',
-        }),
-        new Promise((_, reject) =>
-          setTimeout(() => reject(new Error('GraphQL logout timeout')), 3000),
-        ),
-      ])
-
-      if (graphqlResponse instanceof Response) {
-        const result = await graphqlResponse.json()
-        if (!result.errors) {
-          // GraphQL logout successful
-          setAuthState('unauthenticated')
-          setUserName(null)
-          return
-        }
-      }
-    } catch (err) {
-      console.warn('GraphQL logout failed, trying direct endpoint:', err)
-    }
-
-    try {
-      // Fallback to direct logout endpoint
-      const response = await fetch('/api/logout', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        credentials: 'include',
-      })
-
-      const result = await response.json()
-      if (result.success) {
-        setAuthState('unauthenticated')
-        setUserName(null)
-      } else {
-        throw new Error('Direct logout also failed')
-      }
-    } catch (err) {
-      // Even on complete failure, clear the local state
-      // The user can refresh the page if needed
-      setAuthState('unauthenticated')
-      setUserName(null)
-      setError('Logout completed. Please refresh if you see this message.')
-
-      // Clear error after a short time
-      setTimeout(() => setError(null), 5000)
-    } finally {
-      setIsLoading(false)
-    }
-  }
-
-  if (authState === 'loading') {
+  if (result.fetching) {
     return (
       <div className='flex min-h-screen items-center justify-center bg-gradient-to-br from-purple-50 to-blue-100'>
         <div className='text-center'>
@@ -142,6 +90,42 @@ export default function Home() {
         </div>
       </div>
     )
+  }
+
+  const name = result.data?.me?.name
+
+  const handleLogin = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault()
+    setIsLoading(true)
+    try {
+      const form = event.target as HTMLFormElement
+      await login({
+        username: form.username.value,
+        password: form.password.value,
+      })
+      await refetch()
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
+  const handleLogout = async () => {
+    setIsLoading(true)
+    try {
+      await logout()
+      await refetch()
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
+  const handleRefetch = async () => {
+    setIsLoading(true)
+    try {
+      await refetch()
+    } finally {
+      setIsLoading(false)
+    }
   }
 
   return (
@@ -160,13 +144,7 @@ export default function Home() {
 
           {/* Auth Card */}
           <div className='rounded-xl bg-white p-8 shadow-lg'>
-            {error && (
-              <div className='mb-6 rounded-lg border border-red-200 bg-red-50 p-4'>
-                <p className='text-red-600'>{error}</p>
-              </div>
-            )}
-
-            {authState === 'authenticated' ? (
+            {name ? (
               <div>
                 <div className='mb-6 flex items-center'>
                   <div className='mr-4 flex h-12 w-12 items-center justify-center rounded-full bg-green-100'>
@@ -191,26 +169,40 @@ export default function Home() {
                     <p className='text-gray-600'>
                       Signed in as{' '}
                       <span className='font-medium text-purple-600'>
-                        {userName}
+                        {name}
                       </span>
                     </p>
                   </div>
                 </div>
 
-                <div className='flex gap-4'>
+                <div className='mb-6 flex gap-4'>
                   <button
-                    onClick={checkAuthStatus}
+                    onClick={handleRefetch}
                     disabled={isLoading}
-                    className='flex-1 rounded-lg bg-blue-600 px-4 py-3 font-medium text-white transition-colors hover:bg-blue-700 disabled:opacity-50'
+                    className='flex flex-1 items-center justify-center rounded-lg bg-blue-600 px-4 py-3 font-medium text-white transition-colors hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-50'
                   >
-                    {isLoading ? 'Checking...' : 'Refresh Status'}
+                    {isLoading ? (
+                      <>
+                        <div className='mr-2 h-4 w-4 animate-spin rounded-full border-b-2 border-white'></div>
+                        Refetching...
+                      </>
+                    ) : (
+                      'Refetch Data'
+                    )}
                   </button>
                   <button
                     onClick={handleLogout}
                     disabled={isLoading}
-                    className='flex-1 rounded-lg bg-red-600 px-4 py-3 font-medium text-white transition-colors hover:bg-red-700 disabled:opacity-50'
+                    className='flex flex-1 items-center justify-center rounded-lg bg-red-600 px-4 py-3 font-medium text-white transition-colors hover:bg-red-700 disabled:cursor-not-allowed disabled:opacity-50'
                   >
-                    {isLoading ? 'Signing out...' : 'Sign out'}
+                    {isLoading ? (
+                      <>
+                        <div className='mr-2 h-4 w-4 animate-spin rounded-full border-b-2 border-white'></div>
+                        Signing out...
+                      </>
+                    ) : (
+                      'Sign out'
+                    )}
                   </button>
                 </div>
               </div>
@@ -276,13 +268,32 @@ export default function Home() {
                   <button
                     type='submit'
                     disabled={isLoading}
-                    className='w-full rounded-lg bg-purple-600 px-4 py-3 font-medium text-white transition-colors hover:bg-purple-700 disabled:opacity-50'
+                    className='flex w-full items-center justify-center rounded-lg bg-purple-600 px-4 py-3 font-medium text-white transition-colors hover:bg-purple-700 disabled:cursor-not-allowed disabled:opacity-50'
                   >
-                    {isLoading ? 'Signing in...' : 'Sign in'}
+                    {isLoading ? (
+                      <>
+                        <div className='mr-2 h-4 w-4 animate-spin rounded-full border-b-2 border-white'></div>
+                        Signing in...
+                      </>
+                    ) : (
+                      'Sign in'
+                    )}
                   </button>
                 </form>
               </div>
             )}
+
+            {/* GraphQL Query Section */}
+            <div className='mt-8 border-t border-gray-200 pt-8'>
+              <h3 className='mb-4 text-lg font-semibold text-gray-900'>
+                GraphQL API Test
+              </h3>
+              <p className='mb-4 text-gray-600'>
+                This section demonstrates GraphQL queries with Passport.js
+                authentication.
+              </p>
+              <AuthQuery {...result} />
+            </div>
           </div>
 
           {/* Footer */}
