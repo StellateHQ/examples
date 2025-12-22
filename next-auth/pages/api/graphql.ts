@@ -29,7 +29,7 @@ const Query = t.queryType({
       name: 'me',
       type: User,
       async resolve(_root, args, ctx): Promise<UserType> {
-        const session = await getServerSession(ctx.req, ctx.res, authOptions)
+        const session = await getServerSession(ctx.req, ctx.res, authOptions) as any
         if (!session) {
           throw new GraphQLError(
             'Not authenticated',
